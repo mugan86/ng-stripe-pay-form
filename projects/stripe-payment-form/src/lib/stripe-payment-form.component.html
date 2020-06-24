@@ -1,6 +1,6 @@
 <form #checkout="ngForm" (ngSubmit)="onSubmit()" class="checkout">
-    <div class="form-row">
-        <label for="card-info">Información de la tarjeta</label><br>
+    <div id="pay-form" class="form-row "><br/>
+        <!--<label for="card-info">Información de la tarjeta</label><br>-->
         <div id="card-info" #cardInfo></div>
 
         <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>

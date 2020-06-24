@@ -18,7 +18,8 @@ import { throwError } from 'rxjs';
   styles: [
     `
       form.checkout {
-        max-width: 500px;
+        width: 100%;
+        max-width: 900px;
         margin: 2rem auto;
         text-align: center;
         border: 2px solid #eee;
@@ -59,6 +60,11 @@ import { throwError } from 'rxjs';
         background-color: #f8d7da;
         border-color: #f5c6cb;
         padding: 10px;
+      }
+
+      #pay-form {
+        display: block !important;
+        margin-bottom: 10px !important;
       }
     `,
   ],

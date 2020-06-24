@@ -1,0 +1,14 @@
+{
+  "name": "stripe-payment-form",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^9.1.11",
+    "@angular/core": "^9.1.11",
+    "@angular/forms": "^9.1.11",
+    "rxjs": "~6.5.4",
+    "@fireflysemantics/angular-stripe-service": "^1.0.0"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0"
+  }
+}

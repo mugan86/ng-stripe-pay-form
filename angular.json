@@ -119,6 +119,46 @@
           }
         }
       }
+    },
+    "stripe-payment-form": {
+      "projectType": "library",
+      "root": "projects/stripe-payment-form",
+      "sourceRoot": "projects/stripe-payment-form/src",
+      "prefix": "ng-stripe-pay",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/stripe-payment-form/tsconfig.lib.json",
+            "project": "projects/stripe-payment-form/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/stripe-payment-form/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/stripe-payment-form/src/test.ts",
+            "tsConfig": "projects/stripe-payment-form/tsconfig.spec.json",
+            "karmaConfig": "projects/stripe-payment-form/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/stripe-payment-form/tsconfig.lib.json",
+              "projects/stripe-payment-form/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }},
   "defaultProject": "stripe"
 }

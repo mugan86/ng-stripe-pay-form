@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "liv.dev.watch": "ng build stripe-payment-form --watch"
+    "lib.dev": "ng build stripe-payment-form --watch"
   },
   "private": true,
   "dependencies": {

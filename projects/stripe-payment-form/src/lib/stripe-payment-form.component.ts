@@ -1,11 +1,58 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { AngularStripeService } from '@fireflysemantics/angular-stripe-service';
-import { StripePaymentFormService } from './stripe-payment-form.service';
 
 @Component({
-  selector: 'ng-stripe-pay-stripe-payment-form',
+  selector: 'ng-stripe-pay-payment-form',
   templateUrl: './stripe-payment-form.component.html',
-  styles: [],
+  styles: [
+    `
+      form.checkout {
+        max-width: 500px;
+        margin: 2rem auto;
+        text-align: center;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        padding: 1rem 2rem;
+        background: white;
+
+        font-family: monospace;
+        color: #525252;
+        font-size: 1.1rem;
+      }
+
+      form.checkout button {
+        padding: 0.5rem 1rem;
+        color: white;
+        background: coral;
+        border: none;
+        border-radius: 4px;
+        margin-top: 1rem;
+      }
+
+      form.checkout button:active {
+        background: rgb(165, 76, 43);
+      }
+
+      #card-info {
+        margin-top: 15px;
+      }
+
+      #card-errors {
+        margin-top: 10px;
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        padding: 10px;
+      }
+    `,
+  ],
 })
 export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
   @ViewChild('cardInfo', { static: false }) cardInfo: ElementRef;
@@ -20,13 +67,12 @@ export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cd: ChangeDetectorRef,
-    private stripeService: AngularStripeService,
-    private stripeLibServiceConfig: StripePaymentFormService
+    private stripeService: AngularStripeService
   ) {}
   // 'pk_test_odGrnRj66SzJob5DtWPXMcZf00SggMwP4d'
   ngAfterViewInit() {
     this.stripeService
-      .setPublishableKey(this.stripeLibServiceConfig.publicKey)
+      .setPublishableKey('pk_test_Jsle6ueM2m2SIEFUhiENzX5Y00eBZTSEKf')
       .then((stripe) => {
         this.stripe = stripe;
         const elements = stripe.elements();

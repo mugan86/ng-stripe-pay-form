@@ -4,7 +4,8 @@
   "lib": {
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
-      "@fireflysemantics/angular-stripe-service": "^1.0.0"
+      "@fireflysemantics/angular-stripe-service": "^1.0.0",
+      "@angular/core": "@angular/core"
     }
   }
 }

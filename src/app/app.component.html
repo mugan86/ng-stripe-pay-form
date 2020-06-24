@@ -1,2 +1,6 @@
 <h1>Formulario Stripe</h1>
-<ng-stripe-pay-payment-form></ng-stripe-pay-payment-form>
+<ng-stripe-pay-form
+  (cardOk)="takeToken($event)"
+  [key]="key"
+  [hidePostalCode]="true"
+></ng-stripe-pay-form>

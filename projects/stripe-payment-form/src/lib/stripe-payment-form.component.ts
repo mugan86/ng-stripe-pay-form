@@ -4,12 +4,16 @@ import {
   OnDestroy,
   ElementRef,
   ViewChild,
+  Input,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { AngularStripeService } from '@fireflysemantics/angular-stripe-service';
+import { throwError } from 'rxjs';
 
 @Component({
-  selector: 'ng-stripe-pay-payment-form',
+  selector: 'ng-stripe-pay-form',
   templateUrl: './stripe-payment-form.component.html',
   styles: [
     `
@@ -28,16 +32,21 @@ import { AngularStripeService } from '@fireflysemantics/angular-stripe-service';
       }
 
       form.checkout button {
-        padding: 0.5rem 1rem;
-        color: white;
-        background: coral;
-        border: none;
+        background-color: #343a40;
+        border-color: #343a40;
+        display: inline-block;
+        font-weight: 400;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 18px;
+        padding: 5px 10px;
+        margin-top: 10px;
         border-radius: 4px;
-        margin-top: 1rem;
       }
 
       form.checkout button:active {
-        background: rgb(165, 76, 43);
+        background: #08090a;
       }
 
       #card-info {
@@ -56,11 +65,11 @@ import { AngularStripeService } from '@fireflysemantics/angular-stripe-service';
 })
 export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
   @ViewChild('cardInfo', { static: false }) cardInfo: ElementRef;
-
+  @Input() hidePostalCode = true;
+  @Input() key = '';
   stripe;
   loading = false;
-  confirmation;
-
+  @Output() cardOk = new EventEmitter<any>();
   card: any;
   cardHandler = this.onChange.bind(this);
   error: string;
@@ -71,17 +80,18 @@ export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
   ) {}
   // 'pk_test_odGrnRj66SzJob5DtWPXMcZf00SggMwP4d'
   ngAfterViewInit() {
-    this.stripeService
-      .setPublishableKey('pk_test_Jsle6ueM2m2SIEFUhiENzX5Y00eBZTSEKf')
-      .then((stripe) => {
-        this.stripe = stripe;
-        const elements = stripe.elements();
-        this.card = elements.create('card', {
-          hidePostalCode: true,
-        });
-        this.card.mount(this.cardInfo.nativeElement);
-        this.card.addEventListener('change', this.cardHandler);
+    if (this.key === '' || this.key === undefined || this.key === null) {
+      throwError('Necesario Public Key');
+    }
+    this.stripeService.setPublishableKey(this.key).then((stripe) => {
+      this.stripe = stripe;
+      const elements = stripe.elements();
+      this.card = elements.create('card', {
+        hidePostalCode: this.hidePostalCode,
       });
+      this.card.mount(this.cardInfo.nativeElement);
+      this.card.addEventListener('change', this.cardHandler);
+    });
   }
 
   ngOnDestroy() {
@@ -105,6 +115,7 @@ export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
       console.log('Error:', error);
     } else {
       console.log('Success!', token);
+      this.cardOk.emit(token);
     }
   }
 }

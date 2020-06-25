@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { StripePaymentFormModule } from 'stripe-payment-form';
+import { StripePaymentFormModule } from 'projects/stripe-payment-form/src/public-api';
 
 @NgModule({
   declarations: [

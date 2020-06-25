@@ -17,7 +17,7 @@ import { throwError } from 'rxjs';
   templateUrl: './stripe-payment-form.component.html',
   styles: [
     `
-      form.checkout {
+      #pay-form {
         width: 100%;
         max-width: 900px;
         margin: 2rem auto;
@@ -33,6 +33,9 @@ import { throwError } from 'rxjs';
       }
 
       form.checkout button {
+        margin: 0 auto;
+        max-width: 150px;
+        width: 80%;
         background-color: #343a40;
         border-color: #343a40;
         display: inline-block;
@@ -42,7 +45,6 @@ import { throwError } from 'rxjs';
         vertical-align: middle;
         font-size: 18px;
         padding: 5px 10px;
-        margin-top: 10px;
         border-radius: 4px;
       }
 
@@ -66,6 +68,16 @@ import { throwError } from 'rxjs';
         display: block !important;
         margin-bottom: 10px !important;
       }
+
+      #card-img {
+        width: 100%;
+        height: 100%;
+        max-width: 150px;
+      }
+
+      .vertical-center {
+        text-align: center;
+      }
     `,
   ],
 })
@@ -73,6 +85,7 @@ export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
   @ViewChild('cardInfo', { static: false }) cardInfo: ElementRef;
   @Input() hidePostalCode = true;
   @Input() key = '';
+  @Input() payMoneyInfo = '';
   stripe;
   loading = false;
   @Output() cardOk = new EventEmitter<any>();

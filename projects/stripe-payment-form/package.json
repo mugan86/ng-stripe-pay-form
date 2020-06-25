@@ -1,6 +1,6 @@
 {
   "name": "@mugan86/stripe-payment-form",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "peerDependencies": {
     "@angular/common": "^9.1.11",
     "@angular/core": "^9.1.11",

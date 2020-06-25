@@ -16,11 +16,9 @@
       "dom"
     ],
     "paths": {
-      "stripe-payment-form": [
-        "dist/stripe-payment-form/stripe-payment-form",
-        "dist/stripe-payment-form"
-      ]
-    }
+      "@mugan86/stripe-payment-form": ["dist/stripe-payment-form"],
+      "@mugan86/stripe-payment-form/*": ["dist/stripe-payment-form/*"]
+    },
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

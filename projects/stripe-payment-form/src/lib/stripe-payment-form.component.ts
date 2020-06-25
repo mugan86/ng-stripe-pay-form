@@ -44,7 +44,7 @@ import { throwError } from 'rxjs';
         text-align: center;
         vertical-align: middle;
         font-size: 18px;
-        padding: 5px 10px;
+        padding: 8px 10px;
         border-radius: 4px;
       }
 
@@ -77,6 +77,13 @@ import { throwError } from 'rxjs';
 
       .vertical-center {
         text-align: center;
+        width: 100%;
+      }
+
+      .form-inline {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
       }
     `,
   ],

@@ -104,7 +104,6 @@ export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private stripeService: AngularStripeService
   ) {}
-  // 'pk_test_odGrnRj66SzJob5DtWPXMcZf00SggMwP4d'
   ngAfterViewInit() {
     if (this.key === '' || this.key === undefined || this.key === null) {
       throwError('Necesario Public Key');

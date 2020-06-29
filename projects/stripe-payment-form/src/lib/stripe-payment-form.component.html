@@ -1,5 +1,5 @@
 <!-- Credit card form content -->
-<span class="badge badge-success card-brand">{{ card.type | capitalize}}</span>
+<span class="badge badge-success card-brand">{{ card.type | capitalize }}</span>
 <div class="form-group">
   <label for="cardNumber">
     <h6>Card number</h6>
@@ -49,24 +49,30 @@
       >
       <div class="input-group">
         <select
+          [(ngModel)]="card.expMonth"
+          (ngModelChange)="cardStatusCheck()"
           class="span3"
           name="expiry_month"
           id="expiry_month"
           class="form-control"
         >
           <option
-            value="{{ i + 1 }}"
             *ngFor="let m of months; let i = index"
-            [attr.selected]="card.expMonth == i ? true : null"
-            >{{ months[i] }} ({{ i + 1 }})</option
-          >
-        </select>&nbsp;
-        <select class="span2" name="expiry_year" class="form-control">
+            [ngValue]="m.value"
+            >{{ m.label }} ({{ m.value }})</option
+          > </select
+        >&nbsp;
+        <select
+          [(ngModel)]="card.expYear"
+          (ngModelChange)="cardStatusCheck()"
+          class="span2"
+          name="expiry_year"
+          class="form-control"
+        >
           <option
-            value="{{ i + card.expYear }}"
             *ngFor="let m of years; let i = index"
-            [attr.selected]="card.expYear == i + m ? true : null"
-            >{{ i + m }}</option
+            [ngValue]="m"
+            >{{ m }}</option
           >
         </select>
       </div>
@@ -79,7 +85,9 @@
         title="Three digit CV code on the back of your card"
       >
         <h6>
-          CVC ({{ card.type != "american-express" ? 3 : 4 }})<i
+          Cód. Seguridad
+          <span *ngIf="card.securityCode.size > 2"> -{{ card.securityCode.name }} ({{ card.securityCode.size }})</span>
+          <i
             class="fa fa-question-circle d-inline"
           ></i>
         </h6>
@@ -90,7 +98,7 @@
         appOnlyNumber
         [OnlyNumber]="true"
         [NoDecimals]="true"
-        [attr.maxlength]="card.type != 'american-express' ? 3 : 4"
+        [attr.maxlength]="card.securityCode.size"
         minlength="3"
         type="text"
         required

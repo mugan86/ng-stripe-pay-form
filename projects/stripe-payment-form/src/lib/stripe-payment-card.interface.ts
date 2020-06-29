@@ -5,4 +5,8 @@ export interface IStripePaymentCard {
     cvc?: string;
     valid: boolean;
     type: string;
+    securityCode: {
+        name: string;
+        size: number;
+    };
 }

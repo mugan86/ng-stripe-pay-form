@@ -4,8 +4,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-
-import * as creditCardType from 'credit-card-type';
+import creditCardType from 'credit-card-type';
 import { IStripePaymentCard } from './stripe-payment-card.interface';
 @Component({
   selector: 'ng-stripe-pay-form',
@@ -23,43 +22,77 @@ export class StripePaymentFormComponent implements OnInit {
   loading = false;
   @Output() cardData = new EventEmitter<IStripePaymentCard>();
   error: string;
-  months: Array<string> = [];
+  months: Array<{value: number, label: string}> = [];
   years: Array<number> = [];
   card: IStripePaymentCard = {
+    number: '',
     expMonth: new Date().getMonth() + 1,
     expYear: new Date().getFullYear(),
     valid: false,
     type: '',
-    cvc: ''
+    cvc: '',
+    securityCode: {
+      name: '',
+      size: 0
+    }
   };
-  constructor(
-
-  ) {}
 
   ngOnInit() {
     console.log(this.card.expYear);
     this.months = [
-      'Enero',
-      'Febrero',
-      'Marzo',
-      'Abril',
-      'Mayo',
-      'Junio',
-      'Julio',
-      'Agosto',
-      'Septiembre',
-      'Octubre',
-      'Noviembre',
-      'Diciembre'
+      {
+        value: 1,
+        label: 'Enero'
+      },
+      {
+        value: 2,
+        label: 'Febrero',
+      },
+      {
+        value: 3,
+        label: 'Marzo'
+      },
+      {
+        value: 4,
+        label: 'Abril'
+      },
+      {
+        value: 5,
+        label: 'Mayo'
+      }, {
+        value: 6,
+        label: 'Junio'
+      },
+      {
+        value: 7,
+        label: 'Julio'
+      },
+      {
+        value: 8,
+        label: 'Agosto'
+      }, {
+        value: 9,
+        label: 'Septiembre'
+      },
+      {
+        value: 10,
+        label: 'Octubre'
+      },
+      {
+        value: 11,
+        label: 'Noviembre'
+      },
+      {
+        value: 12,
+        label: 'Diciembre'
+      },
     ];
 
     for (let yearPos = 0; yearPos < 20; yearPos++) {
-      console.log(new Date().getFullYear() + yearPos);
-      this.years[yearPos] = new Date().getFullYear() + yearPos;
+      this.years.push(new Date().getFullYear() + yearPos);
     }
   }
   cardStatusCheck() {
-    console.log(this.card.number);
     this.luhnCheck();
   }
 
@@ -71,7 +104,7 @@ export class StripePaymentFormComponent implements OnInit {
     const singleNums = [];
     let doubleNums = [];
     let finalArry;
-    let validCard = false;
+    this.card.valid = false;
 
     if ((!/\d{15,16}(~\W[a-zA-Z])*$/g.test(ccNum)) || (ccNum.length > 16)){
        return false;
@@ -110,20 +143,32 @@ export class StripePaymentFormComponent implements OnInit {
     }*/
 
     if (sum % 10 === 0){
-       validCard = true;
+       this.card.valid = true;
     }
     // the console log is for you, so you can see the sum, all sums that are
     // divisible by 10 should be good.  Just open up your console to view.
     // console.log(sum);
-    this.card.type = creditCardType(ccNum)[0].type;
-    if (this.card.cvc.length === 3 && this.card.type !== 'american-express' ||
+    console.log(creditCardType(ccNum)[0]);
+    const creditCard = creditCardType(ccNum)[0];
+    this.card.type = creditCard.type;
+    this.card.securityCode.name = creditCard.code.name;
+    this.card.securityCode.size = creditCard.code.size;
+    /*if (this.card.cvc.length === 3 && this.card.type !== 'american-express' ||
       this.card.cvc.length === 4 && this.card.type === 'american-express') {
         console.log('cvc ok', this.card.type, this.card.cvc.length);
         validCard = true;
     } else {
       validCard = false;
+    }*/
+    if (this.card.expYear < new Date().getFullYear() ||
+    this.card.expYear <= new Date().getFullYear() && this.card.expMonth <= (new Date().getMonth() + 1)) {
+      console.log('Fecha de la tarjeta superada');
+      this.card.valid = false;
     }
-    this.card.valid = validCard;
+    if (this.card.securityCode.size !== this.card.cvc.length) {
+      console.log('Código incorrecto - Longitud no correcta');
+      this.card.valid = false;
+    }
     this.sendNotificationStatus();
   }
 

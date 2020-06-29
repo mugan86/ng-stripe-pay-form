@@ -8,8 +8,10 @@ import { IStripePaymentCard } from 'projects/stripe-payment-form/src/public-api'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  card: IStripePaymentCard;
   title = 'stripe';
   getCardData($event: IStripePaymentCard) {
     console.log('cardOk', $event);
+    this.card = $event;
   }
 }

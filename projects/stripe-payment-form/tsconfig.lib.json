@@ -5,11 +5,14 @@
     "target": "es2015",
     "declaration": true,
     "inlineSources": true,
-    "types": [],
+    "types": [
+      "node"
+    ],
     "lib": [
       "dom",
       "es2018"
-    ]
+    ],
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,

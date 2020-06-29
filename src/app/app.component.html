@@ -1,7 +1,27 @@
-<h1>Formulario Stripe</h1>
-<ng-stripe-pay-form
+<h1>Formulario Stripe dd</h1>
+<!--<ng-stripe-pay-form
   (cardOk)="takeToken($event)"
   [key]="key"
   [hidePostalCode]="true"
   [payMoneyInfo]="'€ 25'"
-></ng-stripe-pay-form>
+></ng-stripe-pay-form>--><div class="container">
+  <div class="row">
+  <div class="col-lg">
+    <ng-stripe-pay-form (cardData)="getCardData($event)"></ng-stripe-pay-form>
+  </div>
+</div>
+</div>
+
+
+<ul>
+  <li>American Express: 378282246310005</li>
+  <li>American Express: 371449635398431</li>
+  <li>Discover: 6011111111111117</li>
+  <li>Discover: 6011000990139424</li>
+  <li>JCB: 3530111333300000</li>
+  <li>JCB: 3566002020360505</li>
+  <li>Mastercard: 5555555555554444</li>
+  <li>Mastercard: 5105105105105100</li>
+  <li>Visa: 4111111111111111</li>
+  <li>Visa: 4012888888881881</li>
+</ul>

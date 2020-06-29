@@ -1,148 +1,133 @@
 import {
   Component,
-  AfterViewInit,
-  OnDestroy,
-  ElementRef,
-  ViewChild,
-  Input,
-  EventEmitter,
+  OnInit,
   Output,
+  EventEmitter,
 } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { AngularStripeService } from '@fireflysemantics/angular-stripe-service';
-import { throwError } from 'rxjs';
 
+import * as creditCardType from 'credit-card-type';
+import { IStripePaymentCard } from './stripe-payment-card.interface';
 @Component({
   selector: 'ng-stripe-pay-form',
   templateUrl: './stripe-payment-form.component.html',
   styles: [
     `
-      #pay-form {
-        width: 100%;
-        max-width: 900px;
-        margin: 2rem auto;
-        text-align: center;
-        border: 2px solid #eee;
-        border-radius: 8px;
-        padding: 1rem 2rem;
-        background: white;
-
-        font-family: monospace;
-        color: #525252;
-        font-size: 1.1rem;
-      }
-
-      form.checkout button {
-        margin: 0 auto;
-        max-width: 150px;
-        width: 80%;
-        background-color: #343a40;
-        border-color: #343a40;
-        display: inline-block;
-        font-weight: 400;
-        color: #fff;
-        text-align: center;
-        vertical-align: middle;
-        font-size: 18px;
-        padding: 8px 10px;
-        border-radius: 4px;
-      }
-
-      form.checkout button:active {
-        background: #08090a;
-      }
-
-      #card-info {
-        margin-top: 15px;
-      }
-
-      #card-errors {
-        margin-top: 10px;
-        color: #721c24;
-        background-color: #f8d7da;
-        border-color: #f5c6cb;
-        padding: 10px;
-      }
-
-      #pay-form {
-        display: block !important;
-        margin-bottom: 10px !important;
-      }
-
-      #card-img {
-        width: 100%;
-        height: 100%;
-        max-width: 150px;
-      }
-
-      .vertical-center {
-        text-align: center;
-        width: 100%;
-      }
-
-      .form-inline {
-        display: flex;
-        flex-flow: row wrap;
-        align-items: center;
-      }
-    `,
-  ],
+    .card-brand {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    `
+  ]
 })
-export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('cardInfo', { static: false }) cardInfo: ElementRef;
-  @Input() hidePostalCode = true;
-  @Input() key = '';
-  @Input() payMoneyInfo = '';
-  stripe;
+export class StripePaymentFormComponent implements OnInit {
   loading = false;
-  @Output() cardOk = new EventEmitter<any>();
-  card: any;
-  cardHandler = this.onChange.bind(this);
+  @Output() cardData = new EventEmitter<IStripePaymentCard>();
   error: string;
-
+  months: Array<string> = [];
+  years: Array<number> = [];
+  card: IStripePaymentCard = {
+    expMonth: new Date().getMonth() + 1,
+    expYear: new Date().getFullYear(),
+    valid: false,
+    type: '',
+    cvc: ''
+  };
   constructor(
-    private cd: ChangeDetectorRef,
-    private stripeService: AngularStripeService
+
   ) {}
-  ngAfterViewInit() {
-    if (this.key === '' || this.key === undefined || this.key === null) {
-      throwError('Necesario Public Key');
+
+  ngOnInit() {
+    console.log(this.card.expYear);
+    this.months = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
+    ];
+
+    for (let yearPos = 0; yearPos < 20; yearPos++) {
+      console.log(new Date().getFullYear() + yearPos);
+      this.years[yearPos] = new Date().getFullYear() + yearPos;
     }
-    this.stripeService.setPublishableKey(this.key).then((stripe) => {
-      this.stripe = stripe;
-      const elements = stripe.elements();
-      this.card = elements.create('card', {
-        hidePostalCode: this.hidePostalCode,
-      });
-      this.card.mount(this.cardInfo.nativeElement);
-      this.card.addEventListener('change', this.cardHandler);
+  }
+  cardStatusCheck() {
+    console.log(this.card.number);
+    this.luhnCheck();
+  }
+
+  luhnCheck(){
+    const ccNum = this.card.number;
+    const ccNumSplit: any = ccNum.split('');
+    let sum = 0;
+
+    const singleNums = [];
+    let doubleNums = [];
+    let finalArry;
+    let validCard = false;
+
+    if ((!/\d{15,16}(~\W[a-zA-Z])*$/g.test(ccNum)) || (ccNum.length > 16)){
+       return false;
+    }
+
+    if (ccNum.length === 15){  // american express
+       for (let numberValue = ccNumSplit.length - 1; numberValue >= 0; numberValue--){
+          if (numberValue  % 2 === 0){
+             singleNums.push(ccNumSplit[numberValue]);
+          }else{
+             doubleNums.push((ccNumSplit[numberValue] * 2).toString());
+          }
+       }
+    }else if (ccNum.length === 16){
+       for (let numberValue = ccNumSplit.length - 1; numberValue >= 0; numberValue--){
+          if (numberValue % 2 !== 0){
+             singleNums.push(ccNumSplit[numberValue]);
+          }else{
+             doubleNums.push((ccNumSplit[numberValue] * 2).toString());
+          }
+       }
+    }
+    // joining makes an array to a string and I split them up again
+    // so that every number is a single digit and convert back to array
+
+    doubleNums = doubleNums.join('').split('');
+    finalArry = doubleNums.concat(singleNums);
+
+    let j = 0;
+    finalArry.map( () => {
+      sum += +(finalArry[j]);
+      j++;
     });
-  }
+    /*for (let j = 0; j< finalArry.length; j++){
+       sum += +(finalArry[j]);
+    }*/
 
-  ngOnDestroy() {
-    this.card.removeEventListener('change', this.cardHandler);
-    this.card.destroy();
-  }
-
-  onChange({ error }) {
-    if (error) {
-      this.error = error.message;
-    } else {
-      this.error = null;
+    if (sum % 10 === 0){
+       validCard = true;
     }
-    this.cd.detectChanges();
+    // the console log is for you, so you can see the sum, all sums that are
+    // divisible by 10 should be good.  Just open up your console to view.
+    // console.log(sum);
+    this.card.type = creditCardType(ccNum)[0].type;
+    if (this.card.cvc.length === 3 && this.card.type !== 'american-express' ||
+      this.card.cvc.length === 4 && this.card.type === 'american-express') {
+        console.log('cvc ok', this.card.type, this.card.cvc.length);
+        validCard = true;
+    } else {
+      validCard = false;
+    }
+    this.card.valid = validCard;
+    this.sendNotificationStatus();
   }
 
-  async onSubmit() {
-    const { token, error } = await this.stripe.createToken(this.card);
-
-    if (error) {
-      console.log('Error:', error);
-    } else {
-      // console.log(this.card);
-      console.log(this.cardInfo);
-      console.log('Success!', token);
-      this.cardOk.emit(token);
-    }
+  sendNotificationStatus() {
+    this.cardData.emit(this.card);
   }
 }

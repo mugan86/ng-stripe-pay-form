@@ -1,17 +1,101 @@
-<form #checkout="ngForm" (ngSubmit)="onSubmit()" class="checkout form-inline">
-  <div id="pay-form">
-    <img
-      id="card-img"
-      src="https://res.cloudinary.com/dd7kbplmv/image/upload/v1593063409/images-use-apps/cards.png"
+<!-- Credit card form content -->
+<span class="badge badge-success card-brand">{{ card.type | capitalize}}</span>
+<div class="form-group">
+  <label for="cardNumber">
+    <h6>Card number</h6>
+  </label>
+  <div class="input-group">
+    <input
+      [(ngModel)]="card.number"
+      (ngModelChange)="cardStatusCheck()"
+      appOnlyNumber
+      [OnlyNumber]="true"
+      [NoDecimals]="true"
+      maxlength="16"
+      name="cardNumber"
+      placeholder="Valid card number"
+      class="form-control"
+      required
     />
-    <!--<label for="card-info">Información de la tarjeta</label><br>-->
-    <div id="card-info" #cardInfo></div>
-
-    <div id="card-errors" role="alert" *ngIf="error">{{ error }}</div>
+    <div class="input-group-append">
+      <span class="input-group-text text-muted">
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-credit-card-2-back"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"
+          />
+          <path
+            d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1zM1 9h14v2H1V9z"
+          />
+        </svg>
+      </span>
+    </div>
   </div>
-  <div class="vertical-center">
-    <button type="submit">Pagar
-        <span *ngIf="payMoneyInfo != ''"> ({{payMoneyInfo}})</span>
-    </button>
+</div>
+<div class="row">
+  <div class="col-sm-8">
+    <div class="form-group">
+      <label
+        ><span class="hidden-xs">
+          <h6>Expiration Date</h6>
+        </span></label
+      >
+      <div class="input-group">
+        <select
+          class="span3"
+          name="expiry_month"
+          id="expiry_month"
+          class="form-control"
+        >
+          <option
+            value="{{ i + 1 }}"
+            *ngFor="let m of months; let i = index"
+            [attr.selected]="card.expMonth == i ? true : null"
+            >{{ months[i] }} ({{ i + 1 }})</option
+          >
+        </select>&nbsp;
+        <select class="span2" name="expiry_year" class="form-control">
+          <option
+            value="{{ i + card.expYear }}"
+            *ngFor="let m of years; let i = index"
+            [attr.selected]="card.expYear == i + m ? true : null"
+            >{{ i + m }}</option
+          >
+        </select>
+      </div>
+    </div>
   </div>
-</form>
+  <div class="col-sm-4">
+    <div class="form-group mb-4">
+      <label
+        data-toggle="tooltip"
+        title="Three digit CV code on the back of your card"
+      >
+        <h6>
+          CVC ({{ card.type != "american-express" ? 3 : 4 }})<i
+            class="fa fa-question-circle d-inline"
+          ></i>
+        </h6>
+      </label>
+      <input
+        [(ngModel)]="card.cvc"
+        (ngModelChange)="cardStatusCheck()"
+        appOnlyNumber
+        [OnlyNumber]="true"
+        [NoDecimals]="true"
+        [attr.maxlength]="card.type != 'american-express' ? 3 : 4"
+        minlength="3"
+        type="text"
+        required
+        class="form-control"
+      />
+    </div>
+  </div>
+</div>

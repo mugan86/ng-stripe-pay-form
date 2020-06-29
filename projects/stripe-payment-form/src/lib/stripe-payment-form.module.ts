@@ -2,9 +2,10 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { StripePaymentFormComponent } from './stripe-payment-form.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { throwError } from 'rxjs/internal/observable/throwError';
+import { OnlyNumberDirective } from './only-number.directive';
+import { CapitalizePipe } from './capitalize.pipe';
 @NgModule({
-  declarations: [StripePaymentFormComponent],
+  declarations: [StripePaymentFormComponent, OnlyNumberDirective, CapitalizePipe],
   imports: [
     CommonModule,
     FormsModule

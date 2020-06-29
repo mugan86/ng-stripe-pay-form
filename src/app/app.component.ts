@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { IStripePaymentCard } from 'projects/stripe-payment-form/src/public-api';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AppComponent {
   title = 'stripe';
-  key = environment.stripePublicKey;
-  takeToken($event) {
+  getCardData($event: IStripePaymentCard) {
     console.log('cardOk', $event);
   }
 }

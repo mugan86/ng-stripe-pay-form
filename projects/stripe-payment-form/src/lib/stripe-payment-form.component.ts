@@ -139,6 +139,8 @@ export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
     if (error) {
       console.log('Error:', error);
     } else {
+      // console.log(this.card);
+      console.log(this.cardInfo);
       console.log('Success!', token);
       this.cardOk.emit(token);
     }

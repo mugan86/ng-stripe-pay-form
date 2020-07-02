@@ -9,7 +9,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "lib.dev": "ng build stripe-payment-form --watch",
-    "prod": "ng build stripe-payment-form --prod"
+    "prod": "ng build stripe-payment-form --prod",
+    "publish.lib": "npm run prod && cd dist/stripe-payment-form && npm publish --access=public"
   },
   "private": true,
   "dependencies": {
@@ -22,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~9.1.9",
     "@angular/router": "~9.1.9",
     "@fireflysemantics/angular-stripe-service": "^1.0.0",
+    "@mugan86/api-git-user": "^1.0.5",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

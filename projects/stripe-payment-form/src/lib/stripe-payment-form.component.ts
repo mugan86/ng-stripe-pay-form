@@ -4,13 +4,13 @@ import {
   OnDestroy,
   ElementRef,
   ViewChild,
-  Input,
-  EventEmitter,
-  Output,
+  Input
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { AngularStripeService } from '@fireflysemantics/angular-stripe-service';
 import { throwError } from 'rxjs';
+import { StripePaymentService } from './stripe-payment.service';
+import { Stripe } from '@fireflysemantics/angular-stripe-service/lib/types';
 
 @Component({
   selector: 'ng-stripe-pay-form',
@@ -72,7 +72,7 @@ import { throwError } from 'rxjs';
       #card-img {
         width: 100%;
         height: 100%;
-        max-width: 150px;
+        max-width: 100px;
       }
 
       .vertical-center {
@@ -92,18 +92,24 @@ export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
   @ViewChild('cardInfo', { static: false }) cardInfo: ElementRef;
   @Input() hidePostalCode = true;
   @Input() key = '';
-  @Input() payMoneyInfo = '';
-  stripe;
+  stripe: Stripe;
   loading = false;
-  @Output() cardOk = new EventEmitter<any>();
   card: any;
   cardHandler = this.onChange.bind(this);
   error: string;
 
   constructor(
     private cd: ChangeDetectorRef,
-    private stripeService: AngularStripeService
-  ) {}
+    private stripeService: AngularStripeService,
+    private stripePaymentService: StripePaymentService
+  ) {
+    this.stripePaymentService.getTokenVar$.subscribe((getData) => {
+      if (getData) {
+        this.onSubmit();
+      }
+    });
+  }
+
   ngAfterViewInit() {
     if (this.key === '' || this.key === undefined || this.key === null) {
       throwError('Necesario Public Key');
@@ -134,13 +140,6 @@ export class StripePaymentFormComponent implements AfterViewInit, OnDestroy {
   }
 
   async onSubmit() {
-    const { token, error } = await this.stripe.createToken(this.card);
-
-    if (error) {
-      console.log('Error:', error);
-    } else {
-      console.log('Success!', token);
-      this.cardOk.emit(token);
-    }
+    this.stripePaymentService.createToken(this.stripe, this.card);
   }
 }

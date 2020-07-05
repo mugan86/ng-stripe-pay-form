@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/internal/Subject';
+import { Subject, throwError } from 'rxjs';
 import { Stripe, StripeCard } from '@fireflysemantics/angular-stripe-service/lib/types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class StripePaymentService {
   // Para gestionar el token de la tarjeta para poder procesar el pago
@@ -22,9 +22,10 @@ export class StripePaymentService {
     const { token, error } = await stripe.createToken(card);
 
     if (error) {
-      console.log('Error:', error);
+      // console.log('Error:', error);
+      throwError('Error: ', error.message);
     } else {
-      console.log('Success!', token);
+      // console.log('Success!', token);
       this.updateCardToken(token.id);
     }
   }
